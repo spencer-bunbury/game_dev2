@@ -23,14 +23,67 @@ s2 = pygame.mixer.Sound("images/g2.mp3")
 lpp = pygame.Rect(250,250,50,50)
 rpp = pygame.Rect(650,250,50,50)
 
+lives = 3
+lives2 = 3
+
+rb = []
+lb = []
+
+def hb():
+    global lives
+    for r in rb:
+        r.x -= 5
+        if r.colliderect(lpp):
+            lives -= 1
+            rb.remove(bullet)
+            print(lives)
+    for l in lb:
+        l.x += 5
+        if l.colliderect(rpp):
+            lives2 -= 1
+            lb.remove(bullet)
+            print(lives)
 while playing:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             playing = False
             pygame.quit() 
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_m:
+                bullet = pygame.Rect(rpp.x,rpp.y + 15,10,7)
+                rb.append(bullet)
+            if event.key == pygame.K_x:
+                bullet = pygame.Rect(lpp.x,lpp.y + 15,10,7)
+                lb.append(bullet)
+            if event.key == K_UP:
+                rpp.y -= 40
+            if event.key == K_LEFT and rpp.x >= 485:
+                rpp.x -= 40
+            if event.key == K_RIGHT:
+                rpp.x += 40
+            if event.key == K_DOWN:
+                rpp.y += 40
+            if event.key == K_w:
+                lpp.y -= 40
+            if event.key == K_a:
+                lpp.x -= 40
+            if event.key == K_d and lpp.x <= 400:
+                lpp.x += 40
+            if event.key == K_s:
+                lpp.y += 40
+            if lives <= 0:
+                print("right player wins")
+                playing = False
+            if lives2 <= 0:
+                print("left player wins")
+                playing = False
     screen.blit(bg,(0,0))
     screen.blit(lp,(lpp.x,lpp.y))
     screen.blit(rp,(rpp.x,rpp.y))
     pygame.draw.rect(screen,"black",pygame.Rect(450,0,20,500))
-
+    for r in rb:
+        pygame.draw.rect(screen,"yellow",r)
+    for l in lb:
+        pygame.draw.rect(screen,"red",l)
+    hb()
     pygame.display.update()
