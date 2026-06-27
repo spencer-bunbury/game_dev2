@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import*
 from random import*
+import time
 
 pygame.init()
 pygame.font.init()
@@ -8,6 +9,9 @@ pygame.mixer.init()
 
 screen = pygame.display.set_mode((900,500))
 playing = True
+
+font1 = pygame.font.SysFont("rage",45)
+font = pygame.font.SysFont("gillsansultracondensed",45)
 
 bg = pygame.image.load("images/space2.png")
 lp = pygame.image.load("images/rocket2.png")
@@ -30,19 +34,17 @@ rb = []
 lb = []
 
 def hb():
-    global lives
+    global lives,lives2
     for r in rb:
         r.x -= 5
         if r.colliderect(lpp):
             lives -= 1
             rb.remove(bullet)
-            print(lives)
     for l in lb:
         l.x += 5
         if l.colliderect(rpp):
             lives2 -= 1
             lb.remove(bullet)
-            print(lives)
 while playing:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -71,15 +73,28 @@ while playing:
                 lpp.x += 40
             if event.key == K_s:
                 lpp.y += 40
-            if lives <= 0:
-                print("right player wins")
+            if lives == 1:
+                screen.fill("black")
+                text1 = font.render("right player wins",True,"pink")
+                screen.blit(text1,(350,250))
+                pygame.display.update()
+                time.sleep(5)
                 playing = False
-            if lives2 <= 0:
-                print("left player wins")
+            elif lives2 == 1:
+                screen.fill("black")
+                text2 = font.render("left player wins",True,"pink")
+                screen.blit(text2,(350,250))
+                pygame.display.update()
+                time.sleep(5)
                 playing = False
     screen.blit(bg,(0,0))
     screen.blit(lp,(lpp.x,lpp.y))
     screen.blit(rp,(rpp.x,rpp.y))
+    text = font1.render("lives = " + str(lives),True,"pink")
+    text2 = font1.render("lives = " + str(lives2),True,"pink")
+    screen.blit(text,(50,50))
+    screen.blit(text2,(600,50))
+
     pygame.draw.rect(screen,"black",pygame.Rect(450,0,20,500))
     for r in rb:
         pygame.draw.rect(screen,"yellow",r)
